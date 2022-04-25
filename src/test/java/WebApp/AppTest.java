@@ -3,12 +3,73 @@
  */
 package WebApp;
 
+
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+
 class AppTest {
+    
+    public ArrayList<Integer> array  = new ArrayList<>(); //fonksiyon uygulanacak array
+
+   
+
     @Test void appHasAGreeting() {
         App classUnderTest = new App();
         assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
     }
+    //arraylerin esit oldugunu iddia etmek
+    @Test
+    public void testEqualsArray(){
+        
+       
+        ArrayList<Integer> array1 = new ArrayList<>(Arrays.asList(1,1,1)); //esit mi sorulacak array
+        App.Hesapla(array, 1, 1, 1);
+       
+        assertEquals(array, array1);
+       
+    }
+    //arraylerin esit olmadigini iddia etmek
+    @Test
+    public void testNotEqualsArray(){
+        //ArrayList<Integer> array = new ArrayList<>(); //fonksiyon uygulanacak array
+       
+        ArrayList<Integer> array1 = new ArrayList<>(Arrays.asList(1,1,1)); //esit mi sorulacak array
+        App.Hesapla(array, 2, 2, 2);
+       
+        assertNotEquals(array, array1);
+    }
+    //arrayin bos olmadigi iddia etmek
+    @Test
+    public void testNotNull(){
+       
+        App.Hesapla(array, 1, 1, 1);
+        assertNotNull(array);
+    }
+    //arrayin bos oldugunu iddia etmek
+    @Test
+    public void testNull(){
+        
+        //App.Hesapla();
+        assertNotNull(array);
+    }
+    //ayni array oldugunu iddia etme testi
+    @Test
+    public void testSameArray(){
+        
+        assertSame(App.Hesapla(array, 1, 1, 1), App.Hesapla(array, 1, 2, 1));
+        
+    }
+    //ayni olmayan array oldugunu iddia etme testi
+    @Test
+    public void testNotSameArray(){
+        
+        assertNotSame(App.Hesapla(array, 1, 1, 1), App.Hesapla(array, 2, 2, 1));
+        
+    }
+
 }

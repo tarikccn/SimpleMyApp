@@ -9,52 +9,83 @@ import static spark.Spark.post;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+
+
 import spark.ModelAndView;
 import spark.template.mustache.MustacheTemplateEngine;
 
 public class App {
+    
+    
     public String getGreeting() {
         return "Hello world.";
     }
 
-    public static boolean search(ArrayList<Integer> array, int e) {
-        System.out.println("inside search");
-        if (array == null)
-            return false;
-        for (int elt : array) {
-            if (elt == e)
-                return true;
+    public static Integer Hesapla(ArrayList<Integer> array, int yas, int gunlukSigara, int haftalikSpor){
+
+
+    
+
+
+        if(array == null){
+            System.out.println("Dizi Boş");
         }
-        return false;
+        int ortalamaYasamSuresi = 70;
+        //yas hesaplama formulu
+        int sonuc = yas - gunlukSigara / 3 + (haftalikSpor * 3);
+        array.add(yas);
+        array.add(gunlukSigara);
+        array.add(haftalikSpor);
+        
+        return ortalamaYasamSuresi - sonuc;
+
+        
     }
 
     public static void main(String[] args) {
         port(getHerokuAssignedPort());
-        get("/", (req, res) -> "Hello, World");
+        get("/", (req, res) -> "Merhaba Dünya");
         post("/compute", (req, res) -> {
             // System.out.println(req.queryParams("input1"));
             // System.out.println(req.queryParams("input2"));
-            String input1 = req.queryParams("input1");
-            java.util.Scanner sc1 = new java.util.Scanner(input1);
-            sc1.useDelimiter("[;\r\n]+");
+            int yasInput = Integer.parseInt(req.queryParams("input1")) ;
+            int sigaraInput = Integer.parseInt(req.queryParams("input2")) ;
+            int sporInput = Integer.parseInt(req.queryParams("input3")) ;
+           
+           
             java.util.ArrayList<Integer> inputList = new java.util.ArrayList<>();
-            while (sc1.hasNext()) {
-                int value = Integer.parseInt(sc1.next().replaceAll("\\s", ""));
-                inputList.add(value);
-            }
-            sc1.close();
+            
+                inputList.add(yasInput);
+                inputList.add(sigaraInput);
+                inputList.add(sporInput);
+            
+            // while (sc1.hasNext()) {
+            //     int value = Integer.parseInt(sc1.next().replaceAll("\\s", ""));
+            //     inputList.add(value);
+            // }
+            
+            //sc1.close();
             System.out.println(inputList);
-            String input2 = req.queryParams("input2").replaceAll("\\s", "");
-            int input2AsInt = Integer.parseInt(input2);
-            boolean result = App.search(inputList, input2AsInt);
-            Map<String, Boolean> map = new HashMap<String, Boolean>();
-            map.put("result", result);
+            //String input2 = req.queryParams("input2").replaceAll("\\s", "");
+            //int input2AsInt = Integer.parseInt(input2);
+            int yas = inputList.get(0);
+            int sigara = inputList.get(1);
+            int spor = inputList.get(2);
+            int result = App.Hesapla(inputList, yasInput, sigaraInput, sporInput);
+            
+            
+            Map<String, Integer> map = new HashMap<String, Integer>();
+            map.put("result", result );
+            map.put("yas", yas );
+            map.put("sigara", sigara );
+            map.put("spor", spor );
             return new ModelAndView(map, "compute.mustache");
         }, new MustacheTemplateEngine());
         get("/compute",
                 (rq, rs) -> {
                     Map<String, String> map = new HashMap<String, String>();
-                    map.put("result", "not computed yet!");
+                    map.put("result", "Deger Girilmedi");
                     return new ModelAndView(map, "compute.mustache");
                 },
                 new MustacheTemplateEngine());
